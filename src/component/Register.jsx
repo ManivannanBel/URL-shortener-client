@@ -1,21 +1,67 @@
 import React, { Component } from 'react'
 import { Container, Button, Form, Row, Col } from "react-bootstrap";
+import PropTypes from "prop-types";
+import classnames from "classnames";
+import { connect } from "react-redux";
+import { createUser } from "../actions/securityActions";
+
 import './_LandingPage.css';
 import './_global.css';
 
 class Register extends Component {
+
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       username : "",
+       email : "",
+       password : "",
+       confirmPassword : "", 
+       errors : {}
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.errors){
+      this.setState({errors : nextProps.errors});
+    }
+  } 
+
+  onChange = event => {
+    this.setState({[event.target.name] : event.target.value})
+  }
+
+  onSubmit = event => {
+    event.preventDefault();
+
+    const newUser = {
+      username : this.state.username,
+       email : this.state.email,
+       password : this.state.password,
+       confirmPassword : this.state.confirmPassword, 
+    }
+
+    console.log(newUser)
+
+    this.props.createUser(newUser, this.props.history);
+
+  }
+
     render() {
         return (
           <Container>
             <Row>
               <Col md={{ span: 6, offset: 3 }}>
-              <Form className="margin-top-50">
+              <Form className="margin-top-50" onSubmit={this.onSubmit}>
               <Form.Group controlId="formBasicEmail">
               <Form.Label>Username</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter username"
                   name="username"
+                  value={this.state.username}
+                  onChange={this.onChange}
                 />
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
@@ -24,6 +70,8 @@ class Register extends Component {
                   type="email"
                   placeholder="Enter email"
                   name="email"
+                  value={this.state.email}
+                  onChange={this.onChange}
                 />
                 </Form.Group>
               
@@ -33,6 +81,8 @@ class Register extends Component {
                   type="password"
                   placeholder="Password"
                   name="password"
+                  value={this.state.password}
+                  onChange={this.onChange}
                 />
               </Form.Group>
               <Form.Group controlId="formBasicPassword">
@@ -41,6 +91,8 @@ class Register extends Component {
                   type="password"
                   placeholder="Confirmation password"
                   name="confirmPassword"
+                  value={this.state.confirmPassword}
+                  onChange={this.onChange}
                 />
               </Form.Group>
               <Form.Text className="text-dark">
@@ -58,4 +110,13 @@ class Register extends Component {
     }
 }
 
-export default Register;
+Register.propTypes = {
+  errors : PropTypes.object.isRequired,
+  createUser : PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => ({
+  errors : state.errors
+})
+
+export default connect(mapStateToProps ,{createUser})(Register);

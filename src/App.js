@@ -5,17 +5,20 @@ import Header from './component/Header';
 import Signin from './component/Signin';
 import Register from './component/Register';
 import Dashboard from './component/Dashboard';
+import UserManagement from './component/UserManagement';
+import Footer from './component/Footer';
+import { Provider } from "react-redux";
+import store from "./store";
 
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 //import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import UserManagement from './component/UserManagement';
-import Footer from './component/Footer';
 
 
 function App() {
   return (
     <div className="App">
+      <Provider store={store}>
       <Router>
         <Header/>
         <Route exact path="/signin" component={Signin}/>
@@ -25,7 +28,7 @@ function App() {
         <Route exact path="/user" component={UserManagement}/>
         <Footer/>
       </Router>
-
+      </Provider>
 
     </div>
   );

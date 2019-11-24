@@ -12,7 +12,7 @@ import {
   Modal
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faBan, faCopy } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faBan, faCopy, faEdit } from "@fortawesome/free-solid-svg-icons";
 import "./_UserManagement.css";
 import "./_global.css";
 
@@ -93,12 +93,12 @@ class UserManagement extends Component {
         <Row className="margin-top-20">
           <Col className="text-right-align">Username : </Col>
           <Col>{this.state.username}</Col>
-          <Col><Button onClick={() => this.handleShow("username")}>Edit</Button></Col>
+          <Col><Button onClick={() => this.handleShow("username")}><FontAwesomeIcon icon={faEdit}/>Edit</Button></Col>
         </Row>
         <Row  className="margin-top-20">
           <Col className="text-right-align">Email :</Col>
           <Col>{this.state.email}</Col>
-          <Col><Button onClick={() => this.handleShow("email")}>Edit</Button></Col>
+          <Col><Button onClick={() => this.handleShow("email")}><FontAwesomeIcon icon={faEdit}/> Edit</Button></Col>
         </Row>
         <Row  className="margin-top-20">
           <Col className="text-right-align">No. of links shortened :</Col>

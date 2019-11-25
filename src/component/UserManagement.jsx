@@ -15,7 +15,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faBan, faCopy, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUserProfileDetails, updateUsername, updateEmail, updatePassword } from "../actions/profileActions";
+import { getUserProfileDetails, updateUsername, updateEmail, updatePassword, enableAPIService } from "../actions/profileActions";
+import { clearErrors, clearMessages } from "../actions/clearStateAction";
 
 import "./_UserManagement.css";
 import "./_global.css";
@@ -41,6 +42,7 @@ class UserManagement extends Component {
        noOfActiveLinks : 0,
        noOfLinksCreatedWithAPI : 0,
        totalNumberOfRedirections : 0,
+       hasApi : false,
        errors : {}
     }
   }
@@ -52,7 +54,21 @@ class UserManagement extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const {username, email, noOfLinksShortened, noOfActiveLinks, noOfLinksCreatedWithAPI, totalNumberOfRedirections} = nextProps.userDetails;
+
+    if(nextProps.errors){
+      this.setState({errors : nextProps.errors});
+      //console.log(this.state.errors)
+    }
+
+    const {
+      username,
+      email,
+      noOfLinksShortened,
+      noOfActiveLinks,
+      noOfLinksCreatedWithAPI,
+      totalNumberOfRedirections,
+      hasApi
+    } = nextProps.userDetails;
     console.log(nextProps.userDetails);
     this.setState({
       username,
@@ -60,8 +76,16 @@ class UserManagement extends Component {
       noOfLinksShortened,
       noOfActiveLinks,
       noOfLinksCreatedWithAPI,
-      totalNumberOfRedirections
-    })
+      totalNumberOfRedirections,
+      hasApi
+    });
+  }
+
+  componentWillUnmount(){
+
+    this.props.clearErrors();
+    this.props.clearMessages();
+
   }
 
   handleClose = () =>{ 
@@ -93,6 +117,11 @@ class UserManagement extends Component {
     }
   }
 
+  enableApi = () => {
+    const id = "5dd6018855978547d4330831";
+    this.props.enableAPIService(id);
+  }
+
   updateDetail = (inputType) => {
     const id = "5dd6018855978547d4330831";
     console.log(this.state.email)
@@ -110,12 +139,14 @@ class UserManagement extends Component {
   }
 
   render() {
-    const errors = this.state;
+    const {errors, hasApi} = this.state;
     return (
       <Container fluid={true}>
-        {errors.error && (
-          <div>{errors.error}</div>
-        )}
+        {errors.error && 
+          <div class="margin-top-20 alert alert-danger" role="alert">
+            {errors.error}
+        </div>
+        }
         <h2 className="margin-top-50">Profile</h2>
 
      
@@ -139,20 +170,50 @@ class UserManagement extends Component {
           <Col>{this.state.noOfActiveLinks}</Col>
           <Col></Col>
         </Row>
+        {hasApi &&
         <Row  className="margin-top-10">
-          <Col className="text-right-align">No. of links created with api :</Col>
-          <Col>{this.state.noOfLinksCreatedWithAPI}</Col>
-          <Col></Col>
-        </Row>
+        <Col className="text-right-align">No. of links created with api :</Col>
+        <Col>{this.state.noOfLinksCreatedWithAPI}</Col>
+        <Col></Col>
+      </Row>
+        }
         <Row  className="margin-top-10">
           <Col className="text-right-align">Total No. of redirections :</Col>
           <Col>{this.state.totalNumberOfRedirections}</Col>
           <Col></Col>
         </Row>
 
-        <Button className="margin-top-50" >Enable an API service</Button>
+        {!hasApi &&
+        <Button className="margin-top-50" onClick={this.enableApi}>Enable an API service</Button>
+        }
         <br/>
         <Button className="margin-top-20 bg-danger btn-danger" onClick={() => this.handleShow("password", "passwordToChange")}>Change Password</Button>
+
+        {hasApi &&
+        <React.Fragment>
+        <br/>
+        
+      <form className="margin-top-20 form-inline">
+                  <Form.Label className="left-right-margin col-md">Your API Link</Form.Label>
+                  <input
+                    className="form-control left-right-margin text-align-center col-md"
+                    ref={this.shortUrl}
+                    value="www.belfa.zt/api/SECRET_KEY"
+                    disabled
+                  />
+                  <Button onClick={() => this.onCopy()} className="left-right-margin light col-md">
+                    <FontAwesomeIcon className="copy-grey" icon={faCopy}/><span className="text-dark"> Copy link</span>
+                  </Button>
+                </form>
+                <div className="margin-top-10">json body sholud contain<br/>
+                <code>
+                {
+                  '"url"' + `:` + '"https://www.google.com"'
+                 }  
+                </code>
+                </div>
+      </React.Fragment>
+        }
 
         <Modal show={this.state.show} onHide={this.handleClose}>
         <Modal.Header closeButton>
@@ -161,11 +222,11 @@ class UserManagement extends Component {
         <Modal.Body>
           <Form>
             <Form.Label>Enter new {this.state.modalText}</Form.Label>
-            <Form.Control type="text" name={this.state.modalInputName} value={this.state.modalValue} onChange={this.onChange} />
+            <Form.Control type={(this.state.changePassword?"password":"text")} name={this.state.modalInputName} value={this.state.modalValue} onChange={this.onChange} />
             { this.state.changePassword &&
               <React.Fragment>
               <Form.Label>Enter confirmation password</Form.Label>
-              <Form.Control type="text" name="confirmPassword" value={this.state.confirmPassword} onChange={this.onChange} />
+              <Form.Control type="password" name="confirmPassword" value={this.state.confirmPassword} onChange={this.onChange} />
               </React.Fragment>
             }
           </Form>
@@ -189,11 +250,24 @@ UserManagement.propTypes = {
   userDetails : PropTypes.object.isRequired,
   updateUsername : PropTypes.func.isRequired,
   updateEmail : PropTypes.func.isRequired,
-  updatePassword : PropTypes.func.isRequired
+  updatePassword : PropTypes.func.isRequired,
+  errors : PropTypes.object.isRequired,
+  clearErrors : PropTypes.func.isRequired,
+  clearMessages : PropTypes.func.isRequired,
+  enableAPIService : PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-  userDetails : state.userDetails  
+  userDetails : state.userDetails,
+  errors : state.errors  
 })
 
-export default connect(mapStateToProps, {getUserProfileDetails, updateUsername, updateEmail, updatePassword}) (UserManagement);
+export default connect(mapStateToProps, {
+  getUserProfileDetails,
+  updateUsername,
+  updateEmail,
+  updatePassword,
+  clearErrors,
+  clearMessages,
+  enableAPIService
+})(UserManagement);

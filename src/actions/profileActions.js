@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_USER_DETAILS, GET_ERRORS, GET_USERNAME, GET_EMAIL, GET_MESSAGE } from "./types";
+import { GET_USER_DETAILS, GET_ERRORS, GET_USERNAME, GET_EMAIL, GET_MESSAGE, GET_API_STATUS } from "./types";
 
 export const getUserProfileDetails = (id) => async dispatch => {
     
@@ -68,13 +68,33 @@ export const updatePassword = (newPassword, id) => async dispatch => {
         const res = await axios.put(`http://localhost:5000/user/changePassword/${id}`, newPassword);
         dispatch({
            type : GET_MESSAGE,
-           payload : res.data 
+           payload : "Password updated successfully" 
         });
     }catch(err){
         dispatch({
             type : GET_ERRORS,
             payload : err.response.data
         })
+    }
+}
+
+export const enableAPIService = (id) => async dispatch => {
+
+    try{
+        const res = await axios.put(`http://localhost:5000/user/enableAPIService/${id}`);
+        dispatch({
+            type : GET_MESSAGE,
+            payload : res.data 
+         });
+         dispatch({
+            type : GET_API_STATUS,
+            payload : true 
+         });
+    }catch(err){
+        dispatch({
+            type : GET_ERRORS,
+            payload : err.response.data 
+         });
     }
 
 }

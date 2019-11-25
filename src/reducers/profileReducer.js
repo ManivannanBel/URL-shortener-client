@@ -1,4 +1,4 @@
-import { GET_USER_DETAILS, GET_USERNAME, GET_EMAIL } from '../actions/types';
+import { GET_USER_DETAILS, GET_USERNAME, GET_EMAIL, GET_API_STATUS } from '../actions/types';
 
 const initialState = {};
 
@@ -16,6 +16,11 @@ export default function(state = initialState, actions){
                 ... state,
                 email : actions.payload.email
             };
+        case GET_API_STATUS:
+            return{
+                ...state,
+                hasApi : actions.payload
+            }
         default:
             return state;
     }

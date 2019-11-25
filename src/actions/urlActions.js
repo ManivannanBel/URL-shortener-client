@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_URLS_LIST } from "./types";
+import { GET_ERRORS, GET_URLS_LIST, GET_SHORT_URL } from "./types";
 
 export const shortenUrl = (url, id) => async dispatch => {
 
     try{
-        const res = await axios.post(`/url/${id}`, url);
+        const res = await axios.post(`http://localhost:5000/url/${id}`, url);
         dispatch({
-            type : GET_URLS_LIST,
+            type : GET_SHORT_URL,
             payload : res.data
         })
     }catch(err){

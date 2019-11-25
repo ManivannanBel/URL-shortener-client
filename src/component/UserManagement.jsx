@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faBan, faCopy, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { getUserProfileDetails } from "../actions/profileActions";
+import { getUserProfileDetails, updateUsername, updateEmail, updatePassword } from "../actions/profileActions";
 
 import "./_UserManagement.css";
 import "./_global.css";
@@ -30,12 +30,18 @@ class UserManagement extends Component {
        changePassword : false,
        modalText : "",
        modalValue : "",
-       username : "username",
-       email : "example@mail.com",
+       modalInputName : "",
+       usernameToChange : "",
+       emailToChange : "",
+       passwordToChange : "",
+       confirmPassword : "",
+       username : "",
+       email : "",
        noOfLinksShortened : 0,
        noOfActiveLinks : 0,
        noOfLinksCreatedWithAPI : 0,
-       totalNumberOfRedirections : 0
+       totalNumberOfRedirections : 0,
+       errors : {}
     }
   }
   
@@ -59,34 +65,69 @@ class UserManagement extends Component {
   }
 
   handleClose = () =>{ 
-    this.setState({show : false, modalValue : "", changePassword : false })
+    this.setState({
+      show: false,
+      modalValue: "",
+      changePassword: false,
+      modalText: "",
+      modalInputName: "",
+      confirmPassword: "",
+      passwordToChange: "",
+      usernameToChange: "",
+      emailToChange: ""
+    });
   };
   
-  handleShow = (text) =>{
-     this.setState({show : true, modalText : text})
+  handleShow = (text, name) =>{
+     this.setState({show : true, modalText : text, modalInputName : name})
      if(text === "password")
       this.setState({changePassword : true})
   };
 
   onChange = (event) => {
-    this.setState({ [event.target.name] : event.target.value, modalValue : event.target.value })
+    console.log(event.target.name)
+    if(event.target.name ===  "confirmPassword"){
+      this.setState({ [event.target.name] : event.target.value});
+    }else{
+      this.setState({ [event.target.name] : event.target.value, modalValue : event.target.value })
+    }
+  }
+
+  updateDetail = (inputType) => {
+    const id = "5dd6018855978547d4330831";
+    console.log(this.state.email)
+    if(inputType === "username"){
+      const data = {newUsername : this.state.usernameToChange}
+      this.props.updateUsername(data, id);
+    }else if(inputType === "email"){
+      const data = {newEmail : this.state.emailToChange}
+      this.props.updateEmail(data, id);
+    }else if(inputType === "password"){
+      const data = {newPassword : this.state.passwordToChange, confirmPassword : this.state.confirmPassword}
+      this.props.updatePassword(data, id);
+    }
+    this.handleClose();
   }
 
   render() {
+    const errors = this.state;
     return (
       <Container fluid={true}>
+        {errors.error && (
+          <div>{errors.error}</div>
+        )}
         <h2 className="margin-top-50">Profile</h2>
 
      
         <Row className="margin-top-20">
           <Col className="text-right-align">Username : </Col>
           <Col>{this.state.username}</Col>
-          <Col><Button onClick={() => this.handleShow("username")}><FontAwesomeIcon icon={faEdit}/>Edit</Button></Col>
+          <Col><Button onClick={() => this.handleShow("username", "usernameToChange")}><FontAwesomeIcon icon={faEdit}/>Edit</Button></Col>
         </Row>
         <Row  className="margin-top-20">
           <Col className="text-right-align">Email :</Col>
           <Col>{this.state.email}</Col>
-          <Col><Button onClick={() => this.handleShow("email")}><FontAwesomeIcon icon={faEdit}/> Edit</Button></Col>
+          <Col><Button onClick={() => this.handleShow("email", "emailToChange")}><FontAwesomeIcon icon={faEdit}/> Edit</Button></Col>
         </Row>
         <Row  className="margin-top-20">
           <Col className="text-right-align">No. of links shortened :</Col>
@@ -111,7 +152,7 @@ class UserManagement extends Component {
 
         <Button className="margin-top-50" >Enable an API service</Button>
         <br/>
-        <Button className="margin-top-20 bg-danger btn-danger" onClick={() => this.handleShow("password")}>Change Password</Button>
+        <Button className="margin-top-20 bg-danger btn-danger" onClick={() => this.handleShow("password", "passwordToChange")}>Change Password</Button>
 
         <Modal show={this.state.show} onHide={this.handleClose}>
         <Modal.Header closeButton>
@@ -120,11 +161,11 @@ class UserManagement extends Component {
         <Modal.Body>
           <Form>
             <Form.Label>Enter new {this.state.modalText}</Form.Label>
-            <Form.Control type="text" name={this.state.modalText} value={this.state.modalValue} onChange={this.onChange} />
+            <Form.Control type="text" name={this.state.modalInputName} value={this.state.modalValue} onChange={this.onChange} />
             { this.state.changePassword &&
               <React.Fragment>
               <Form.Label>Enter confirmation password</Form.Label>
-              <Form.Control type="text" name={this.state.modalText} value={this.state.modalValue} onChange={this.onChange} />
+              <Form.Control type="text" name="confirmPassword" value={this.state.confirmPassword} onChange={this.onChange} />
               </React.Fragment>
             }
           </Form>
@@ -133,7 +174,7 @@ class UserManagement extends Component {
           <Button variant="secondary" onClick={this.handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={this.handleClose}>
+          <Button type="submit" variant="primary"  onClick={() => this.updateDetail(this.state.modalText)}>
             Update
           </Button>
         </Modal.Footer>
@@ -145,11 +186,14 @@ class UserManagement extends Component {
 
 UserManagement.propTypes = {
   getUserProfileDetails : PropTypes.func.isRequired,
-  userDetails : PropTypes.object.isRequired
+  userDetails : PropTypes.object.isRequired,
+  updateUsername : PropTypes.func.isRequired,
+  updateEmail : PropTypes.func.isRequired,
+  updatePassword : PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
   userDetails : state.userDetails  
 })
 
-export default connect(mapStateToProps, {getUserProfileDetails}) (UserManagement);
+export default connect(mapStateToProps, {getUserProfileDetails, updateUsername, updateEmail, updatePassword}) (UserManagement);

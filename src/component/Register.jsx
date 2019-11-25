@@ -49,6 +49,9 @@ class Register extends Component {
   }
 
     render() {
+
+      const {errors} = this.state;
+
         return (
           <Container>
             <Row>
@@ -58,42 +61,66 @@ class Register extends Component {
               <Form.Label>Username</Form.Label>
                 <Form.Control
                   type="text"
+                  className={classnames("",{
+                    "is-invalid" : errors.username
+                  })}
                   placeholder="Enter username"
                   name="username"
                   value={this.state.username}
                   onChange={this.onChange}
                 />
+                {errors.username && (
+                  <div className="invalid-feedback">{errors.username}</div>
+                )}
                 </Form.Group>
                 <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
+                  className={classnames("",{
+                    "is-invalid" : errors.email
+                  })}
                   placeholder="Enter email"
                   name="email"
                   value={this.state.email}
                   onChange={this.onChange}
                 />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email}</div>
+                )}
                 </Form.Group>
               
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
+                  className={classnames("",{
+                    "is-invalid" : errors.password
+                  })}
                   placeholder="Password"
                   name="password"
                   value={this.state.password}
                   onChange={this.onChange}
                 />
+                {errors.password && (
+                  <div className="invalid-feedback">{errors.password}</div>
+                )}
               </Form.Group>
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
+                  className={classnames("",{
+                    "is-invalid" : errors.confirmPassword
+                  })}
                   placeholder="Confirmation password"
                   name="confirmPassword"
                   value={this.state.confirmPassword}
                   onChange={this.onChange}
                 />
+                {errors.confirmPassword && (
+                  <div className="invalid-feedback">{errors.confirmPassword}</div>
+                )}
               </Form.Group>
               <Form.Text className="text-dark">
                   We'll never share your email with anyone else.

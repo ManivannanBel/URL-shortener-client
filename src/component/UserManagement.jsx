@@ -13,6 +13,10 @@ import {
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faBan, faCopy, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getUserProfileDetails } from "../actions/profileActions";
+
 import "./_UserManagement.css";
 import "./_global.css";
 
@@ -35,6 +39,24 @@ class UserManagement extends Component {
     }
   }
   
+  componentDidMount(){
+    const id = "5dd6018855978547d4330831";
+
+    this.props.getUserProfileDetails(id);
+  }
+
+  componentWillReceiveProps(nextProps){
+    const {username, email, noOfLinksShortened, noOfActiveLinks, noOfLinksCreatedWithAPI, totalNumberOfRedirections} = nextProps.userDetails;
+    console.log(nextProps.userDetails);
+    this.setState({
+      username,
+      email,
+      noOfLinksShortened,
+      noOfActiveLinks,
+      noOfLinksCreatedWithAPI,
+      totalNumberOfRedirections
+    })
+  }
 
   handleClose = () =>{ 
     this.setState({show : false, modalValue : "", changePassword : false })
@@ -55,41 +77,7 @@ class UserManagement extends Component {
       <Container fluid={true}>
         <h2 className="margin-top-50">Profile</h2>
 
-        {/*<table className="margin-top-20 profile-table" striped bordered hover>
-          <tbody>
-            <tr>
-              <td className="text-right-align"><span className="padding-right-50">Username </span>:</td>
-              <td className="text-left-align padding-left-50">manivannan</td>
-              <td>
-                <Button onClick={() => this.handleShow("username")}>Edit</Button>
-              </td>
-            </tr>
-               <tr>
-              <td className="text-right-align"><span className="padding-right-50">email  </span>:</td>
-              <td className="text-left-align padding-left-50">manivannan@mail.com</td>
-              <td>
-                <Button onClick={() => this.handleShow("email")}>Edit</Button>
-              </td>
-            </tr>
-            <tr>
-              <td className="text-right-align"><span className="padding-right-50">No. of links shortened  </span>:</td>
-              <td className="text-left-align padding-left-50" colSpan="2">10</td>
-            </tr>
-            <tr>
-              <td className="text-right-align"><span className="padding-right-50">No. of active links  </span>:</td>
-              <td className="text-left-align padding-left-50" colSpan="2">10</td>
-            </tr>
-            <tr>
-              <td className="text-right-align"><span className="padding-right-50">No. of links created with api  </span>:</td>
-              <td className="text-left-align padding-left-50" colSpan="2">10</td>
-            </tr>
-            <tr>
-              <td className="text-right-align"><span className="padding-right-50">Total No. of redirection  </span>:</td>
-              <td className="text-left-align padding-left-50" colSpan="2">10</td>
-            </tr>
-          </tbody>
-        </table>*/}
-
+     
         <Row className="margin-top-20">
           <Col className="text-right-align">Username : </Col>
           <Col>{this.state.username}</Col>
@@ -155,4 +143,13 @@ class UserManagement extends Component {
   }
 }
 
-export default UserManagement;
+UserManagement.propTypes = {
+  getUserProfileDetails : PropTypes.func.isRequired,
+  userDetails : PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+  userDetails : state.userDetails  
+})
+
+export default connect(mapStateToProps, {getUserProfileDetails}) (UserManagement);

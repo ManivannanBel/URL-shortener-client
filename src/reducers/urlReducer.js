@@ -1,4 +1,4 @@
-import { GET_SHORT_URL, GET_URLS_LIST } from "../actions/types";
+import { GET_SHORT_URL, GET_URLS_LIST, CLEAR_SHORT_URL } from "../actions/types";
 
 const initialState = {
     shortUrl : "",
@@ -17,7 +17,11 @@ export default function(state = initialState, action){
                 ...state,
                 urlList : action.payload
             };
-
+        case CLEAR_SHORT_URL:
+            return {
+                ...state,
+                shortUrl : action.payload
+            }
         default:
             return state;
     }

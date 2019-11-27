@@ -11,6 +11,7 @@ export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const GET_SHORT_URL = "GET_SHORT_URL";
 export const DELETE_SHORT_URL = "DELETE_SHORT_URL";
 export const GET_URLS_LIST = "GET_URLS_LIST";
+export const CLEAR_SHORT_URL = "CLEAR_SHORT_URL";
 
 //User details
 export const GET_USER_DETAILS = "GET_USER_DETAILS";

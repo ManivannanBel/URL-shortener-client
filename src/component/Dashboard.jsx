@@ -15,7 +15,8 @@ import {
 import {Link} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faBan, faCopy } from "@fortawesome/free-solid-svg-icons";
-import { shortenUrl } from "../actions/urlActions";
+import { shortenUrl, getUrlList } from "../actions/urlActions";
+import { clearErrors, clearMessages, clearShortUrl } from "../actions/clearStateAction"
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 
@@ -29,24 +30,48 @@ class Dashboard extends Component {
 
         this.state = {
           url : "",
-          shortUrl : ""
+          shortUrl : "",
+          urls : [],
+          errors : {},
+          message : {}
         }
 
         this.shortUrl = React.createRef();
     }
 
+    componentDidMount(){
+      const id = "5dd6018855978547d4330831";
+      this.props.getUrlList(id);
+    }
+
    componentWillReceiveProps(nextProps){
 
-    const {urlList, shortUrl} = nextProps.urlData
+      if(nextProps.errors){
+        this.setState({errors : nextProps.errors})
+      }
 
-      this.setState({shortUrl});
+      if(nextProps.message){
+        this.setState({message : nextProps.message})
+      }
 
+      const {urlList, shortUrl} = nextProps.urlData
+      this.setState({shortUrl, urls : urlList});
+   }
+
+   componentWillUnmount(){
+     this.props.clearErrors();
+     this.props.clearMessages();
+     this.props.clearShortUrl();
    }
 
   onSubmit = event => {
       event.preventDefault();
       const id = "5dd6018855978547d4330831";
+      this.props.clearErrors();
+      this.props.clearMessages();
+      this.props.clearShortUrl();
       this.props.shortenUrl({url : this.state.url}, id)
+      this.props.getUrlList(id);
   }  
 
   onChange = event => {
@@ -64,10 +89,44 @@ class Dashboard extends Component {
   }
 
   render() {
-    const {shortUrl} = this.state;
+    const {shortUrl, errors, message, urls} = this.state;
+
+    const shortenedUrlsList = <div class="alert alert-success" role="alert">
+                                You have no shortened URLs
+                              </div>;
+    const apiUrlsList = <div class="alert alert-success" role="alert">
+                                  You have no shortened URLs created with API
+                                </div>;
+
+    //console.log(urls.map(url => url.original_url))                                
+    if(urls.length !== 0){
+      /*const list1 = urls.filter(url => !url.is_api);
+      shortenedUrlsList = list1.map(url => <Row>
+        <Col>{url.original_url}</Col>
+        <Col>{url.shortened_url}</Col>
+        <Col>{url.no_of_redirections}</Col>
+      </Row>)
+      const list2 = urls.filter(url => url.is_api);
+      apiUrlsList = list2.map(url => <Row>
+        <Col>{url.original_url}</Col>
+        <Col>{url.shortened_url}</Col>
+        <Col>{url.no_of_redirections}</Col>
+      </Row>)*/
+    }
+
     return (
       <React.Fragment>
         <Container>
+        {errors.error && 
+          <div class="margin-top-20 alert alert-danger" role="alert">
+            {errors.error}
+        </div>
+        }
+        {message.success && 
+          <div class="margin-top-20 alert alert-success" role="alert">
+            {message.success}
+        </div>
+        }
           <Form className="margin-top-50" onSubmit={this.onSubmit}>
             <FormGroup controlId="">
               <FormLabel>Shorten URL</FormLabel>
@@ -120,9 +179,8 @@ class Dashboard extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  <div class="alert alert-success" role="alert">
-                    You have no shortened URLs
-                  </div>
+                  {shortenedUrlsList}
+
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
@@ -134,9 +192,7 @@ class Dashboard extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  <div class="alert alert-success" role="alert">
-                    You have no shortened URLs created with API
-                  </div>
+                  {apiUrlsList}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
@@ -149,11 +205,19 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   shortenUrl : PropTypes.func.isRequired,
-  urlData : PropTypes.object.isRequired
+  urlData : PropTypes.object.isRequired,
+  errors : PropTypes.object.isRequired,
+  message : PropTypes.object.isRequired,
+  clearErrors : PropTypes.func.isRequired,
+  clearMessages : PropTypes.func.isRequired,
+  clearShortUrl : PropTypes.func.isRequired, 
+  getUrlList : PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
-  urlData : state.url   
+  urlData : state.url,
+  errors : state.errors,
+  message : state.message   
 })
 
-export default connect(mapStateToProps,{shortenUrl}) (Dashboard);
+export default connect(mapStateToProps,{shortenUrl, clearErrors, clearMessages, clearShortUrl, getUrlList}) (Dashboard);

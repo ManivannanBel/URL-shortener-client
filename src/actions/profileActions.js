@@ -10,6 +10,7 @@ export const getUserProfileDetails = (id) => async dispatch => {
             payload : res.data
         })
     }catch(err){
+        //console.log(err)
         dispatch({
             type : GET_ERRORS,
             payload : err.response.data
@@ -29,7 +30,11 @@ export const updateUsername = (newUsername, id) => async dispatch => {
         })
         dispatch({
             type : GET_MESSAGE,
-            payload : "Username updated successfully"
+            payload : { success : "Username updated successfully"}
+        })
+        dispatch({
+            type : GET_ERRORS,
+            payload : {}
         })
     }catch(err){
         dispatch({
@@ -51,7 +56,11 @@ export const updateEmail = (newEmail, id) => async dispatch => {
         })
         dispatch({
             type : GET_MESSAGE,
-            payload : "Email updated successfully"
+            payload : { success : "Email updated successfully"}
+        })
+        dispatch({
+            type : GET_ERRORS,
+            payload : {}
         })
     }catch(err){
         dispatch({
@@ -70,6 +79,10 @@ export const updatePassword = (newPassword, id) => async dispatch => {
            type : GET_MESSAGE,
            payload : "Password updated successfully" 
         });
+        dispatch({
+            type : GET_ERRORS,
+            payload : {}
+        })
     }catch(err){
         dispatch({
             type : GET_ERRORS,

@@ -43,7 +43,8 @@ class UserManagement extends Component {
        noOfLinksCreatedWithAPI : 0,
        totalNumberOfRedirections : 0,
        hasApi : false,
-       errors : {}
+       errors : {},
+       message : {}
     }
   }
   
@@ -58,6 +59,12 @@ class UserManagement extends Component {
     if(nextProps.errors){
       this.setState({errors : nextProps.errors});
       //console.log(this.state.errors)
+    }
+
+    if(nextProps.message !== Object){
+      //const message = {success : nextProps.message}
+      //console.log(message)
+      this.setState({message : nextProps.message});
     }
 
     const {
@@ -139,7 +146,7 @@ class UserManagement extends Component {
   }
 
   render() {
-    const {errors, hasApi} = this.state;
+    const {errors, hasApi, message} = this.state;
     return (
       <Container fluid={true}>
         {errors.error && 
@@ -147,6 +154,12 @@ class UserManagement extends Component {
             {errors.error}
         </div>
         }
+        {message.success && 
+          <div class="margin-top-20 alert alert-success" role="alert">
+            {message.success}
+        </div>
+        }
+
         <h2 className="margin-top-50">Profile</h2>
 
      
@@ -254,12 +267,14 @@ UserManagement.propTypes = {
   errors : PropTypes.object.isRequired,
   clearErrors : PropTypes.func.isRequired,
   clearMessages : PropTypes.func.isRequired,
-  enableAPIService : PropTypes.func.isRequired
+  enableAPIService : PropTypes.func.isRequired,
+  message : PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   userDetails : state.userDetails,
-  errors : state.errors  
+  errors : state.errors,
+  message : state.message 
 })
 
 export default connect(mapStateToProps, {

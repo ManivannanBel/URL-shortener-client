@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 
 import "./_Dashboard.css";
 import "./_global.css";
+import UrlDetailComponent from "./UrlDetailComponent";
 
 class Dashboard extends Component {
 
@@ -91,28 +92,41 @@ class Dashboard extends Component {
   render() {
     const {shortUrl, errors, message, urls} = this.state;
 
-    const shortenedUrlsList = <div class="alert alert-success" role="alert">
-                                You have no shortened URLs
-                              </div>;
-    const apiUrlsList = <div class="alert alert-success" role="alert">
-                                  You have no shortened URLs created with API
-                                </div>;
+    const shortenedUrlsList = () => {
+      const shortUrls = urls.filter(url => !url.is_api);
+      //console.log(shortUrls);
+      //console.log("lens "+ shortUrls.length);
+      if(shortUrls.length === 0){
+        return (
+          <div className="alert alert-success" role="alert">
+            You have no shortened URLs
+          </div>
+        )
+      }else{
+        return (shortUrls.map(urlData => (
+          <UrlDetailComponent key={urlData._id} urlData={urlData}/>
+        )))
+      }
+    } 
 
-    //console.log(urls.map(url => url.original_url))                                
-    if(urls.length !== 0){
-      /*const list1 = urls.filter(url => !url.is_api);
-      shortenedUrlsList = list1.map(url => <Row>
-        <Col>{url.original_url}</Col>
-        <Col>{url.shortened_url}</Col>
-        <Col>{url.no_of_redirections}</Col>
-      </Row>)
-      const list2 = urls.filter(url => url.is_api);
-      apiUrlsList = list2.map(url => <Row>
-        <Col>{url.original_url}</Col>
-        <Col>{url.shortened_url}</Col>
-        <Col>{url.no_of_redirections}</Col>
-      </Row>)*/
-    }
+
+    const apiUrlsList = () => {
+      const apiUrls = urls.filter(url => url.is_api);
+      //console.log(apiUrls)
+      //console.log("len "+apiUrls.length)
+      if(apiUrls.length === 0){
+        return (
+          <div class="alert alert-success" role="alert">
+            You have no shortened URLs created with API
+          </div>
+        )
+      }else{
+        return (apiUrls.map(urlData => (
+          <UrlDetailComponent key={urlData._id} urlData={urlData}/>
+        )))
+      }
+    } 
+  
 
     return (
       <React.Fragment>
@@ -179,8 +193,7 @@ class Dashboard extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="0">
                 <Card.Body>
-                  {shortenedUrlsList}
-
+                  {shortenedUrlsList()}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
@@ -192,7 +205,7 @@ class Dashboard extends Component {
               </Card.Header>
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  {apiUrlsList}
+                  {apiUrlsList()}
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

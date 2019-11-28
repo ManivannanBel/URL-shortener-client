@@ -228,7 +228,7 @@ class UserManagement extends Component {
       </React.Fragment>
         }
 
-        <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal show={this.state.show} onHide={this.handleClose} centered>
         <Modal.Header closeButton>
     <Modal.Title>Change {this.state.modalText}</Modal.Title>
         </Modal.Header>

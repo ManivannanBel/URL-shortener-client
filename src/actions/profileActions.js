@@ -1,10 +1,10 @@
 import axios from "axios";
 import { GET_USER_DETAILS, GET_ERRORS, GET_USERNAME, GET_EMAIL, GET_MESSAGE, GET_API_STATUS } from "./types";
 
-export const getUserProfileDetails = (id) => async dispatch => {
+export const getUserProfileDetails = () => async dispatch => {
     
     try{
-        const res = await axios.get(`http://localhost:5000/user/${id}`);
+        const res = await axios.get(`http://localhost:5000/user/`);
         dispatch({
             type : GET_USER_DETAILS,
             payload : res.data
@@ -19,10 +19,10 @@ export const getUserProfileDetails = (id) => async dispatch => {
 
 }
 
-export const updateUsername = (newUsername, id) => async dispatch => {
+export const updateUsername = (newUsername) => async dispatch => {
 
     try{
-        const res = await axios.put(`http://localhost:5000/user/changeUsername/${id}`, newUsername);
+        const res = await axios.put(`http://localhost:5000/user/changeUsername/`, newUsername);
         //console.log(res);
         dispatch({
             type : GET_USERNAME,
@@ -45,10 +45,10 @@ export const updateUsername = (newUsername, id) => async dispatch => {
 
 }
 
-export const updateEmail = (newEmail, id) => async dispatch => {
+export const updateEmail = (newEmail) => async dispatch => {
 
     try{
-        const res = await axios.put(`http://localhost:5000/user/changeEmail/${id}`, newEmail);
+        const res = await axios.put(`http://localhost:5000/user/changeEmail/`, newEmail);
         //console.log(res);
         dispatch({
             type : GET_EMAIL,
@@ -71,10 +71,10 @@ export const updateEmail = (newEmail, id) => async dispatch => {
 
 }
 
-export const updatePassword = (newPassword, id) => async dispatch => {
+export const updatePassword = (newPassword) => async dispatch => {
 
     try{
-        const res = await axios.put(`http://localhost:5000/user/changePassword/${id}`, newPassword);
+        const res = await axios.put(`http://localhost:5000/user/changePassword/`, newPassword);
         dispatch({
            type : GET_MESSAGE,
            payload : "Password updated successfully" 
@@ -91,10 +91,10 @@ export const updatePassword = (newPassword, id) => async dispatch => {
     }
 }
 
-export const enableAPIService = (id) => async dispatch => {
+export const enableAPIService = () => async dispatch => {
 
     try{
-        const res = await axios.put(`http://localhost:5000/user/enableAPIService/${id}`);
+        const res = await axios.put(`http://localhost:5000/user/enableAPIService/`);
         dispatch({
             type : GET_MESSAGE,
             payload : res.data 

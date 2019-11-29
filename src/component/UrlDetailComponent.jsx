@@ -38,9 +38,9 @@ class UrlDetailComponent extends Component {
   };
 
   handleDelete = () => {
-      const id = "5dd6018855978547d4330831";
+      
       const data = { url : this.props.urlData.original_url}
-      this.props.deleteUrl(data, id);
+      this.props.deleteUrl(data);
       this.handleClose();
   }
 

@@ -49,9 +49,8 @@ class UserManagement extends Component {
   }
   
   componentDidMount(){
-    const id = "5dd6018855978547d4330831";
 
-    this.props.getUserProfileDetails(id);
+    this.props.getUserProfileDetails();
   }
 
   componentWillReceiveProps(nextProps){
@@ -76,7 +75,7 @@ class UserManagement extends Component {
       totalNumberOfRedirections,
       hasApi
     } = nextProps.userDetails;
-    console.log(nextProps.userDetails);
+    //console.log(nextProps.userDetails);
     this.setState({
       username,
       email,
@@ -125,22 +124,20 @@ class UserManagement extends Component {
   }
 
   enableApi = () => {
-    const id = "5dd6018855978547d4330831";
-    this.props.enableAPIService(id);
+    this.props.enableAPIService();
   }
 
   updateDetail = (inputType) => {
-    const id = "5dd6018855978547d4330831";
     console.log(this.state.email)
     if(inputType === "username"){
       const data = {newUsername : this.state.usernameToChange}
-      this.props.updateUsername(data, id);
+      this.props.updateUsername(data);
     }else if(inputType === "email"){
       const data = {newEmail : this.state.emailToChange}
-      this.props.updateEmail(data, id);
+      this.props.updateEmail(data);
     }else if(inputType === "password"){
       const data = {newPassword : this.state.passwordToChange, confirmPassword : this.state.confirmPassword}
-      this.props.updatePassword(data, id);
+      this.props.updatePassword(data);
     }
     this.handleClose();
   }

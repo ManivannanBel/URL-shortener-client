@@ -1,9 +1,9 @@
 import axios from "axios";
 import { GET_ERRORS, GET_URLS_LIST, GET_SHORT_URL, GET_MESSAGE, ADD_TO_URL_LIST, DELETE_SHORT_URL } from "./types";
 
-export const shortenUrl = (url, id) => dispatch => {
+export const shortenUrl = (url) => dispatch => {
   axios
-    .post(`http://localhost:5000/url/${id}`, url)
+    .post(`http://localhost:5000/url/`, url)
     .then(res => {
       dispatch({
         type: GET_SHORT_URL,
@@ -48,9 +48,9 @@ export const shortenUrl = (url, id) => dispatch => {
     }*/
 };
 
-export const getUrlList = id => async dispatch => {
+export const getUrlList = () => async dispatch => {
   try {
-    const res = await axios.post(`http://localhost:5000/url/urls/${id}`);
+    const res = await axios.post(`http://localhost:5000/url/urls/`);
     dispatch({
       type: GET_URLS_LIST,
       payload: res.data
@@ -65,7 +65,7 @@ export const getUrlList = id => async dispatch => {
 };
 
 
-export const deleteUrl = (url, id) => async dispatch => {
+export const deleteUrl = (url) => async dispatch => {
 
     if(window.confirm(`Do you want to delete this url (${url.url})?`)){
     try{
@@ -73,7 +73,7 @@ export const deleteUrl = (url, id) => async dispatch => {
         //const res = await axios.delete(`http://localhost:5000/url/${id}`, url);
         const res = await axios({
             method : "DELETE",
-            url : `http://localhost:5000/url/${id}`,
+            url : `http://localhost:5000/url/`,
             data : {
                 url : url.url
             }

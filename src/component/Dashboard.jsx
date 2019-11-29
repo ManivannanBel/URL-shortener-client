@@ -41,8 +41,7 @@ class Dashboard extends Component {
     }
 
     componentDidMount(){
-      const id = "5dd6018855978547d4330831";
-      this.props.getUrlList(id);
+      this.props.getUrlList();
     }
 
    componentWillReceiveProps(nextProps){
@@ -67,12 +66,11 @@ class Dashboard extends Component {
 
   onSubmit = event => {
       event.preventDefault();
-      const id = "5dd6018855978547d4330831";
       this.props.clearErrors();
       this.props.clearMessages();
       this.props.clearShortUrl();
-      this.props.shortenUrl({url : this.state.url}, id)
-      this.props.getUrlList(id);
+      this.props.shortenUrl({url : this.state.url})
+      this.props.getUrlList();
   }  
 
   onChange = event => {

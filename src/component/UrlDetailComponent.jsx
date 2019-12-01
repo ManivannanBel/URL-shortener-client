@@ -105,9 +105,9 @@ class UrlDetailComponent extends Component {
                 <Form.Label>Creation time</Form.Label>
                 <Col>
                   <FormControl
-                    type="date"
+                    type="text"
                     disabled
-                    defaultValue={creation_time}
+                    value={new Date(creation_time)}
                   />
                 </Col>
               </Form.Group>
@@ -115,9 +115,9 @@ class UrlDetailComponent extends Component {
                 <Form.Label>Expiration time</Form.Label>
                 <Col>
                   <FormControl
-                    type="date"
+                    type="text"
                     disabled
-                    defaultValue={new Date(expiration_time)}
+                    value={new Date(expiration_time)}
                   />
                 </Col>
               </Form.Group>

@@ -43,9 +43,12 @@ class UserManagement extends Component {
        noOfLinksCreatedWithAPI : 0,
        totalNumberOfRedirections : 0,
        hasApi : false,
+       apiKey : "",
        errors : {},
        message : {}
     }
+
+    this.apilink = React.createRef();
   }
   
   componentDidMount(){
@@ -73,7 +76,8 @@ class UserManagement extends Component {
       noOfActiveLinks,
       noOfLinksCreatedWithAPI,
       totalNumberOfRedirections,
-      hasApi
+      hasApi,
+      apiKey
     } = nextProps.userDetails;
     //console.log(nextProps.userDetails);
     this.setState({
@@ -83,7 +87,8 @@ class UserManagement extends Component {
       noOfActiveLinks,
       noOfLinksCreatedWithAPI,
       totalNumberOfRedirections,
-      hasApi
+      hasApi,
+      apiKey
     });
   }
 
@@ -142,17 +147,27 @@ class UserManagement extends Component {
     this.handleClose();
   }
 
+   onCopy = () => {
+    //console.log(this.shortUrl.current.value);
+    //alert("Copied the text: " + this.shortUrl.current.value);
+    //this.shortUrl.current.select();
+    //document.execCommand('copy');
+    navigator.clipboard.writeText(this.apilink.current.value);
+    //event.target.focus();
+    //alert("Copied the text: " + this.shortUrl.current);
+  }
+
   render() {
     const {errors, hasApi, message} = this.state;
     return (
       <Container fluid={true}>
         {errors.error && 
-          <div class="margin-top-20 alert alert-danger" role="alert">
+          <div className="margin-top-20 alert alert-danger" role="alert">
             {errors.error}
         </div>
         }
         {message.success && 
-          <div class="margin-top-20 alert alert-success" role="alert">
+          <div className="margin-top-20 alert alert-success" role="alert">
             {message.success}
         </div>
         }
@@ -207,8 +222,8 @@ class UserManagement extends Component {
                   <Form.Label className="left-right-margin col-md">Your API Link</Form.Label>
                   <input
                     className="form-control left-right-margin text-align-center col-md"
-                    ref={this.shortUrl}
-                    value="www.belfa.zt/api/SECRET_KEY"
+                    ref={this.apilink}
+                    value={"www.belfa.zt/api/" + this.state.apiKey}
                     disabled
                   />
                   <Button onClick={() => this.onCopy()} className="left-right-margin light col-md">
@@ -218,7 +233,7 @@ class UserManagement extends Component {
                 <div className="margin-top-10">json body sholud contain<br/>
                 <code>
                 {
-                  '"url"' + `:` + '"https://www.google.com"'
+                  '"url"' + `:` + '"https://www.example.com"'
                  }  
                 </code>
                 </div>

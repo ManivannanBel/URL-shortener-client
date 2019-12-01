@@ -130,12 +130,12 @@ class Dashboard extends Component {
       <React.Fragment>
         <Container>
         {errors.error && 
-          <div class="margin-top-20 alert alert-danger" role="alert">
+          <div className="margin-top-20 alert alert-danger" role="alert">
             {errors.error}
         </div>
         }
         {message.success && 
-          <div class="margin-top-20 alert alert-success" role="alert">
+          <div className="margin-top-20 alert alert-success" role="alert">
             {message.success}
         </div>
         }

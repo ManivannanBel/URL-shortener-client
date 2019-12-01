@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from 'prop-types';
 import { loginUser } from "../actions/securityActions";
 import classnames from "classnames";
+import { clearErrors, clearMessages, clearShortUrl } from "../actions/clearStateAction";
 
 
 import './_LandingPage.css';
@@ -17,7 +18,8 @@ class Signin extends Component {
     this.state = {
        email : "",
        password : "",
-       errors : {}
+       errors : {},
+       message : {}
     }
   }
 
@@ -25,15 +27,28 @@ class Signin extends Component {
     if(this.props.auth.isAuthenticated){
       this.props.history.push("/dashboard");
      }
+     if(this.props.message){
+       this.state.message = this.props.message
+     }
   }
+
+  componentWillUnmount(){
+    this.props.clearErrors();
+    this.props.clearMessages();
+    this.props.clearShortUrl();
+   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.auth.isAuthenticated){
       this.props.history.push('/dashboard');
     }
 
+    if(nextProps.message){
+      this.state.message = nextProps.message
+    }
+
     if(nextProps.errors){
-      this.setState({errors : nextProps.errors})
+      this.setState({errors : nextProps.errors, message : {}})
     }
   }
   
@@ -54,9 +69,19 @@ class Signin extends Component {
   }
 
     render() {
-      const {errors} = this.state;
+      const {errors, message} = this.state;
         return (
           <Container>
+            {errors.error && 
+          <div className="margin-top-20 alert alert-danger" role="alert">
+            {errors.error}
+        </div>
+        }
+        {message.success && 
+          <div className="margin-top-20 alert alert-success" role="alert">
+            {message.success}
+        </div>
+        }
             <Row>
               <Col md={{ span: 6, offset: 3 }}>
               <Form className="margin-top-50" onSubmit={this.onSubmit}>
@@ -108,12 +133,17 @@ class Signin extends Component {
 Signin.propTypes = {
   auth : PropTypes.object.isRequired,
   errors : PropTypes.object.isRequired,
-  loginUser : PropTypes.func.isRequired
+  loginUser : PropTypes.func.isRequired,
+  clearErrors : PropTypes.func.isRequired, 
+  clearMessages : PropTypes.func.isRequired,
+  clearShortUrl : PropTypes.func.isRequired,
+  message : PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
   auth : state.auth,
-  errors : state.errors
+  errors : state.errors,
+  message : state.message
 })
 
-export default connect(mapStateToProps, {loginUser}) (Signin);
+export default connect(mapStateToProps, {loginUser, clearErrors, clearMessages, clearShortUrl}) (Signin);

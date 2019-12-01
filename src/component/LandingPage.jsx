@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import { Container, Form, Table, FormLabel, FormControl, FormGroup, Button, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faBan, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { clearErrors, clearMessages, clearShortUrl } from "../actions/clearStateAction";
+import {shortenAnonymousUser} from "../actions/urlActions";
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
 
@@ -12,6 +14,14 @@ class LandingPage extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+          url : "",
+          shortUrl : "",
+          errors : {},
+          message : {}
+        }
+
         this.shortUrl = React.createRef();
     }
 
@@ -21,12 +31,38 @@ class LandingPage extends Component {
      }
    }
 
+   componentWillReceiveProps(nextProps){
+     if(nextProps.message){
+       this.setState({message : nextProps.message});
+     }
+     if(nextProps.errors){
+       this.setState({errors : nextProps.errors, message : {}})
+     }
+     this.setState({shortUrl : nextProps.urlData.shortUrl})
+   }
+
+   componentWillUnmount(){
+    this.props.clearErrors();
+    this.props.clearMessages();
+    this.props.clearShortUrl();
+   }
+
+   onChange = event => {
+    this.setState({[event.target.name] : event.target.value})
+  }
+
   onSubmit = event => {
-      event.preventDefaults();
+      event.preventDefault();
+      this.props.clearErrors();
+      this.props.clearMessages();
+      this.props.clearShortUrl();
+      //console.log(this.state.url)
+      this.props.shortenAnonymousUser({url : this.state.url})
+      this.setState({url : ""})
   }  
 
   onCopy = () => {
-    console.log(this.shortUrl.current.value);
+    //console.log(this.shortUrl.current.value);
     //alert("Copied the text: " + this.shortUrl.current.value);
     //this.shortUrl.current.select();
     //document.execCommand('copy');
@@ -36,13 +72,25 @@ class LandingPage extends Component {
   }
 
   render(){
+    const {shortUrl, errors, message} = this.state;
+
     return (
       <React.Fragment>
         <Container>
-          <Form className="margin-top-50" onSubmit={this.onSubmit}>
+        {errors.error && 
+          <div className="margin-top-20 alert alert-danger" role="alert">
+            {errors.error}
+        </div>
+        }
+        {message.success && 
+          <div className="margin-top-20 alert alert-success" role="alert">
+            {message.success}
+        </div>
+        }
+          <Form className="margin-top-50" onSubmit={this.onSubmit} >
             <FormGroup controlId="">
               <FormLabel>Shorten URL</FormLabel>
-              <FormControl type="text" placeholder="Enter URL" name="url" />
+              <FormControl type="text" placeholder="Enter URL" name="url" value={this.state.url} onChange={this.onChange} />
               <Form.Text>
                 This short URL will be valid only for one month, If you want
                 short URL for long time then just sign in
@@ -51,6 +99,7 @@ class LandingPage extends Component {
             <Button type="submit"> Shorten </Button>
           </Form>
 
+          {shortUrl && 
           <div className="margin-top-50">
             <Row>
                 <Col md={{ span: 10, offset: 1 }}>
@@ -59,7 +108,7 @@ class LandingPage extends Component {
                   <input
                     className="form-control left-right-margin text-align-center col-md"
                     ref={this.shortUrl}
-                    value="www.belfa.zt/AgfDtH"
+                    value={"www.belfa.zt/"+shortUrl}
                     disabled
                   />
                   <Button onClick={() => this.onCopy()} className="left-right-margin light col-md">
@@ -68,7 +117,7 @@ class LandingPage extends Component {
                 </form>
                 </Col>
             </Row>
-          </div>
+          </div>}
 
           <h4 className="margin-top-50">Services we offer for our users</h4>
           <Table className="margin-top-20 margin-bottom-20" striped bordered hover>
@@ -83,7 +132,7 @@ class LandingPage extends Component {
               <tr>
                 <td>URL expiration</td>
                 <td>1 month</td>
-                <td>1 year(can be extended)</td>
+                <td>User defined</td>
               </tr>
               <tr>
                 <td>Custom URLs</td>
@@ -121,11 +170,20 @@ class LandingPage extends Component {
 }
 
 LandingPage.propTypes = {
-  auth : PropTypes.object.isRequired
+  auth : PropTypes.object.isRequired,
+  clearErrors : PropTypes.func.isRequired, 
+  clearMessages : PropTypes.func.isRequired,
+  clearShortUrl : PropTypes.func.isRequired,
+  shortenAnonymousUser : PropTypes.func.isRequired,
+  errors : PropTypes.object.isRequired,
+  message : PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-  auth : state.auth
+  auth : state.auth,
+  urlData : state.url,
+  errors : state.errors,
+  message : state.message
 })
 
-export default connect( mapStateToProps, {}) (LandingPage);
+export default connect( mapStateToProps, {clearErrors, clearMessages, clearShortUrl, shortenAnonymousUser}) (LandingPage);

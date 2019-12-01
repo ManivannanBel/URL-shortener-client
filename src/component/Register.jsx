@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { createUser } from "../actions/securityActions";
+import { clearErrors, clearMessages, clearShortUrl } from "../actions/clearStateAction";
 
 import './_LandingPage.css';
 import './_global.css';
@@ -27,6 +28,12 @@ class Register extends Component {
       this.props.history.push("/dashboard");
      }
   }
+
+  componentWillUnmount(){
+    this.props.clearErrors();
+    //this.props.clearMessages();
+    this.props.clearShortUrl();
+   }
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.errors){
@@ -146,7 +153,10 @@ class Register extends Component {
 Register.propTypes = {
   errors : PropTypes.object.isRequired,
   createUser : PropTypes.func.isRequired,
-  auth : PropTypes.object.isRequired
+  auth : PropTypes.object.isRequired,
+  clearErrors : PropTypes.func.isRequired, 
+  clearMessages : PropTypes.func.isRequired,
+  clearShortUrl : PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -154,4 +164,4 @@ const mapStateToProps = state => ({
   auth : state.auth
 })
 
-export default connect(mapStateToProps ,{createUser})(Register);
+export default connect(mapStateToProps ,{createUser, clearErrors, clearMessages, clearShortUrl})(Register);

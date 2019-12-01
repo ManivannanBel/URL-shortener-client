@@ -2,6 +2,9 @@ import React, {Component} from "react";
 import { Container, Form, Table, FormLabel, FormControl, FormGroup, Button, Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faBan, faCopy } from '@fortawesome/free-solid-svg-icons';
+import {connect} from "react-redux";
+import PropTypes from 'prop-types';
+
 import './_LandingPage.css';
 import './_global.css';
 
@@ -12,7 +15,11 @@ class LandingPage extends Component {
         this.shortUrl = React.createRef();
     }
 
-   
+   componentDidMount(){
+     if(this.props.auth.isAuthenticated){
+      this.props.history.push("/dashboard");
+     }
+   }
 
   onSubmit = event => {
       event.preventDefaults();
@@ -113,4 +120,12 @@ class LandingPage extends Component {
   }
 }
 
-export default LandingPage;
+LandingPage.propTypes = {
+  auth : PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+  auth : state.auth
+})
+
+export default connect( mapStateToProps, {}) (LandingPage);

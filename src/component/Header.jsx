@@ -4,14 +4,44 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types'
-
+import { connect } from "react-redux";
+import { logout } from "../actions/securityActions";
 
 import './_Header.css';
 import './_global.css';
 
 class Header extends Component {
-    
+  
+    onLogoutClick = () => {
+      this.props.logout();
+    }
+
     render() {
+
+      const {isAuthenticated, user} = this.props.auth;
+
+      const authLinks = (
+        <React.Fragment>
+          <Nav className="mr-auto">
+                  <Link className="nav-link nav-text-light" to="/dashboard">Dashboard</Link>
+                </Nav>
+                <Nav>
+      <Link className="nav-link nav-text-light" to="/user"><FontAwesomeIcon icon={faUserCircle}/> {user.username}</Link>
+                  <a className="nav-link nav-text-light" onClick={this.onLogoutClick}>Log out</a>
+                </Nav>
+        </React.Fragment>
+      )
+
+      const guestLinks = (
+        <React.Fragment>
+           <Nav className="mr-auto"></Nav>
+           <Nav>
+        <Link className="nav-link nav-text-light" to="/register">Register</Link>
+        <Link className="nav-link nav-text-light" to="/signin">Sign in</Link>  
+        </Nav>
+        </React.Fragment>        
+        )
+
         return (
           <div>
             <Navbar className="navbar-primary-color" collapseOnSelect expand="sm" variant="dark">
@@ -20,33 +50,7 @@ class Header extends Component {
               </Link>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="mr-auto">
-                  
-                  <Link className="nav-link nav-text-light" to="/dashboard">Dashboard</Link>
-                  
-                  {/*<Nav.Link href="#pricing">Pricing</Nav.Link>
-                  <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">
-                      Action
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
-                      Another action
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">
-                      Something
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">
-                      Separated link
-                    </NavDropdown.Item>
-                  </NavDropdown>*/}
-                </Nav>
-                <Nav>
-                <Link className="nav-link nav-text-light" to="/user"><FontAwesomeIcon icon={faUserCircle}/>Username</Link>
-                  <Link className="nav-link nav-text-light" to="/register">Register</Link>
-                  <Link className="nav-link nav-text-light" to="/signin">Sign in</Link>
-                  <Link className="nav-link nav-text-light" to="/signin">Log out</Link>
-                </Nav>
+                {isAuthenticated ? authLinks : guestLinks}
               </Navbar.Collapse>
             </Navbar>
           </div>
@@ -54,4 +58,13 @@ class Header extends Component {
     }
 }
 
-export default Header;
+Header.propTypes = {
+  logout : PropTypes.func.isRequired,
+  auth : PropTypes.object.isRequired
+}
+
+const mapStateToProps = state => ({
+  auth : state.auth,
+})
+
+export default connect(mapStateToProps, {logout}) (Header);

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { loginUser } from "../actions/securityActions";
 import classnames from "classnames";
 
+
 import './_LandingPage.css';
 import './_global.css';
 
@@ -18,6 +19,12 @@ class Signin extends Component {
        password : "",
        errors : {}
     }
+  }
+
+  componentDidMount(){
+    if(this.props.auth.isAuthenticated){
+      this.props.history.push("/dashboard");
+     }
   }
 
   componentWillReceiveProps(nextProps) {

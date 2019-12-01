@@ -9,7 +9,7 @@ export const shortenUrl = (url) => dispatch => {
         type: GET_SHORT_URL,
         payload: res.data
       });
-      console.log(res.data)
+     //console.log(res.data)
     if(res.data.updateList){
         dispatch({
             type: ADD_TO_URL_LIST,
@@ -22,10 +22,16 @@ export const shortenUrl = (url) => dispatch => {
       });
     })
     .catch(err => {
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      });
+      if(err.response.status === 401){
+        window.location.href="/signin";
+      }else{
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        });
+      }
+      //console.log(err.response)
+      
     });
 
   /*try{
@@ -55,12 +61,16 @@ export const getUrlList = () => async dispatch => {
       type: GET_URLS_LIST,
       payload: res.data
     });
-    console.log(res.data);
+    //console.log(res.data);
   } catch (err) {
-    dispatch({
-      type: GET_ERRORS,
-      payload: err.response.data
-    });
+    if(err.response.status === 401){
+      window.location.href="/signin";
+    }else{
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });  
+    }
   }
 };
 
@@ -69,7 +79,7 @@ export const deleteUrl = (url) => async dispatch => {
 
     if(window.confirm(`Do you want to delete this url (${url.url})?`)){
     try{
-        console.log(url)
+        //console.log(url)
         //const res = await axios.delete(`http://localhost:5000/url/${id}`, url);
         const res = await axios({
             method : "DELETE",
@@ -87,10 +97,14 @@ export const deleteUrl = (url) => async dispatch => {
             payload: { success : res.data.success}
         })
     }catch(err){
+      if(err.response.status === 401){
+        window.location.href="/signin";
+      }else{
         dispatch({
             type : GET_ERRORS,
             payload : err.response.data
         })
+      }
     }
     }
 }

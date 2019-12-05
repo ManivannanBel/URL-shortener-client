@@ -19,7 +19,8 @@ class Signin extends Component {
        email : "",
        password : "",
        errors : {},
-       message : {}
+       message : {},
+       disableSigninButton : false
     }
   }
 
@@ -48,12 +49,14 @@ class Signin extends Component {
     }
 
     if(nextProps.errors){
-      this.setState({errors : nextProps.errors, message : {}})
+      this.setState({errors : nextProps.errors, message : {}, disableSigninButton : false})
     }
   }
   
   onSubmit = (event) => {
     event.preventDefault();
+
+    this.setState({disableSigninButton : true})
 
     const userCreds = {
       email : this.state.email,
@@ -118,7 +121,7 @@ class Signin extends Component {
                   <div className="invalid-feedback">{errors.password}</div>
                 )}
               </Form.Group>
-              <Button variant="primary" type="submit">
+              <Button disabled={this.state.disableSigninButton} variant="primary" type="submit">
                 Sign in
               </Button>
             </Form>

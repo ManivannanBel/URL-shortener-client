@@ -19,7 +19,8 @@ class Register extends Component {
        email : "",
        password : "",
        confirmPassword : "", 
-       errors : {}
+       errors : {},
+       disableRegisterButton : false
     }
   }
 
@@ -37,7 +38,7 @@ class Register extends Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.errors){
-      this.setState({errors : nextProps.errors});
+      this.setState({errors : nextProps.errors, disableRegisterButton : false});
     }
   } 
 
@@ -48,6 +49,8 @@ class Register extends Component {
   onSubmit = event => {
     event.preventDefault();
 
+    this.setState({disableRegisterButton : true})
+
     const newUser = {
       username : this.state.username,
        email : this.state.email,
@@ -55,7 +58,7 @@ class Register extends Component {
        confirmPassword : this.state.confirmPassword, 
     }
 
-    console.log(newUser)
+   // console.log(newUser)
 
     this.props.createUser(newUser, this.props.history);
 
@@ -138,8 +141,8 @@ class Register extends Component {
               <Form.Text className="text-dark">
                   We'll never share your email with anyone else.
                 </Form.Text>
-              <Button className="margin-top-20" variant="primary" type="submit">
-                Sign in
+              <Button disabled={this.state.disableRegisterButton} className="margin-top-20" variant="primary" type="submit">
+                Register
               </Button>
             </Form>
 

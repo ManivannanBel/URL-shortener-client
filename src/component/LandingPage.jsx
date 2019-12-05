@@ -19,7 +19,8 @@ class LandingPage extends Component {
           url : "",
           shortUrl : "",
           errors : {},
-          message : {}
+          message : {},
+          disableShortenButton : false
         }
 
         this.shortUrl = React.createRef();
@@ -38,7 +39,9 @@ class LandingPage extends Component {
      if(nextProps.errors){
        this.setState({errors : nextProps.errors, message : {}})
      }
-     this.setState({shortUrl : nextProps.urlData.shortUrl})
+     if(nextProps.urlData.shortUrl){
+       this.setState({shortUrl : nextProps.urlData.shortUrl, disableShortenButton : false})
+     }
    }
 
    componentWillUnmount(){
@@ -57,6 +60,7 @@ class LandingPage extends Component {
       this.props.clearMessages();
       this.props.clearShortUrl();
       //console.log(this.state.url)
+      this.setState({disableShortenButton : true});
       this.props.shortenAnonymousUser({url : this.state.url})
       this.setState({url : ""})
   }  
@@ -96,7 +100,7 @@ class LandingPage extends Component {
                 short URL for long time then just sign in
               </Form.Text>
             </FormGroup>
-            <Button type="submit"> Shorten </Button>
+            <Button disabled={this.state.disableShortenButton} type="submit"> Shorten </Button>
           </Form>
 
           {shortUrl && 

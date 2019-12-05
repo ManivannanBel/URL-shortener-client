@@ -34,7 +34,8 @@ class Dashboard extends Component {
           shortUrl : "",
           urls : [],
           errors : {},
-          message : {}
+          message : {},
+          disableShortenButton : false
         }
 
         this.shortUrl = React.createRef();
@@ -56,6 +57,10 @@ class Dashboard extends Component {
 
       const {urlList, shortUrl} = nextProps.urlData
       this.setState({shortUrl, urls : urlList});
+      if(shortUrl){
+        //console.log(shortUrl)
+        this.setState({disableShortenButton : false})
+      }
    }
 
    componentWillUnmount(){
@@ -69,12 +74,14 @@ class Dashboard extends Component {
       this.props.clearErrors();
       this.props.clearMessages();
       this.props.clearShortUrl();
+      //console.log("submit")
+      this.setState({disableShortenButton : true})
       this.props.shortenUrl({url : this.state.url})
-      this.props.getUrlList();
+      //this.props.getUrlList();
   }  
 
   onChange = event => {
-    this.setState({[event.target.name] : event.target.value})
+    this.setState({[event.target.name] : event.target.value, disableShortenButton : false})
   }
 
   onCopy = () => {
@@ -148,7 +155,7 @@ class Dashboard extends Component {
                 short URL for long time then just sign in
               </Form.Text>
             </FormGroup>
-            <Button type="submit"> Shorten </Button>
+            <Button disabled={this.state.disableShortenButton} type="submit"> Shorten </Button>
           </Form>
 
           {shortUrl &&

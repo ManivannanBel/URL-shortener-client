@@ -46,7 +46,7 @@ class Header extends Component {
           <div>
             <Navbar className="navbar-primary-color" collapseOnSelect expand="sm" variant="dark">
               <Link to='/'>
-               <Navbar.Brand className="nav-text-light">Minima</Navbar.Brand>
+               <Navbar.Brand className="nav-text-light">Kut-ty</Navbar.Brand>
               </Link>
               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
               <Navbar.Collapse id="responsive-navbar-nav">

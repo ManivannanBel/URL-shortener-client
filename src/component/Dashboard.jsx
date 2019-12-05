@@ -114,7 +114,7 @@ class Dashboard extends Component {
       //console.log("len "+apiUrls.length)
       if(apiUrls.length === 0){
         return (
-          <div class="alert alert-success" role="alert">
+          <div className="alert alert-success" role="alert">
             You have no shortened URLs created with API
           </div>
         )
@@ -162,7 +162,7 @@ class Dashboard extends Component {
                 <input
                   className="form-control left-right-margin text-align-center col-md"
                   ref={this.shortUrl}
-                  value={"https://belfa.zt/"+shortUrl}
+                  value={"https://kut-ty.herokuapp.com/"+shortUrl}
                   disabled
                 />
                 <Button

@@ -62,7 +62,7 @@ class UrlDetailComponent extends Component {
                 <code className="text-dark">{original_url}</code>
               </Col>
               <Col sm={5}>
-                Short Url: <code>www.belfa.zt/{shortened_url}</code>
+                Short Url: <code>https://kut-ty.herokuapp.com/{shortened_url}</code>
               </Col>
               <Col sm={2}>
                 <Button onClick={this.handleShow}>
@@ -87,7 +87,7 @@ class UrlDetailComponent extends Component {
                   <FormControl
                     type="text"
                     disabled
-                    defaultValue={shortened_url}
+                    defaultValue={"https://kut-ty.herokuapp.com/"+shortened_url}
                   />
                 </Col>
               </Form.Group>

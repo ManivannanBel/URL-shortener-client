@@ -223,7 +223,7 @@ class UserManagement extends Component {
                   <input
                     className="form-control left-right-margin text-align-center col-md"
                     ref={this.apilink}
-                    value={"www.belfa.zt/api/" + this.state.apiKey}
+                    value={"https://kut-ty.herokuapp.com/api/" + this.state.apiKey}
                     disabled
                   />
                   <Button onClick={() => this.onCopy()} className="left-right-margin light col-md">

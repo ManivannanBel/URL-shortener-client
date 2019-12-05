@@ -108,7 +108,7 @@ class LandingPage extends Component {
                   <input
                     className="form-control left-right-margin text-align-center col-md"
                     ref={this.shortUrl}
-                    value={"www.belfa.zt/"+shortUrl}
+                    value={"https://kut-ty.herokuapp.com/"+shortUrl}
                     disabled
                   />
                   <Button onClick={() => this.onCopy()} className="left-right-margin light col-md">

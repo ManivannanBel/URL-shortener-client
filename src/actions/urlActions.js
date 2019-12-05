@@ -10,7 +10,7 @@ import {
 
 export const shortenAnonymousUser = url => dispatch => {
   axios
-    .post(`http://localhost:5000/url/anonymousShorten/`, url)
+    .post(`https://kut-ty.herokuapp.com/url/anonymousShorten/`, url)
     .then(res => {
       console.log(res.data)
      
@@ -35,7 +35,7 @@ export const shortenAnonymousUser = url => dispatch => {
 
 export const shortenUrl = url => dispatch => {
   axios
-    .post(`http://localhost:5000/url/`, url)
+    .post(`https://kut-ty.herokuapp.com/url/`, url)
     .then(res => {
       dispatch({
         type: GET_SHORT_URL,
@@ -87,7 +87,7 @@ export const shortenUrl = url => dispatch => {
 
 export const getUrlList = () => async dispatch => {
   try {
-    const res = await axios.post(`http://localhost:5000/url/urls/`);
+    const res = await axios.get(`https://kut-ty.herokuapp.com/url/urls/`);
     dispatch({
       type: GET_URLS_LIST,
       payload: res.data
@@ -95,7 +95,7 @@ export const getUrlList = () => async dispatch => {
     //console.log(res.data);
   } catch (err) {
     if (err.response.status === 401) {
-      window.location.href = "/signin";
+     window.location.href = "/signin";
     } else {
       dispatch({
         type: GET_ERRORS,
@@ -112,7 +112,7 @@ export const deleteUrl = url => async dispatch => {
       //const res = await axios.delete(`http://localhost:5000/url/${id}`, url);
       const res = await axios({
         method: "DELETE",
-        url: `http://localhost:5000/url/`,
+        url: `https://kut-ty.herokuapp.com/url/`,
         data: {
           url: url.url
         }

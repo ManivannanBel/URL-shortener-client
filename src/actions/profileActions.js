@@ -10,7 +10,7 @@ import {
 
 export const getUserProfileDetails = () => async dispatch => {
   try {
-    const res = await axios.get(`http://localhost:5000/user/`);
+    const res = await axios.get(`https://kut-ty.herokuapp.com/user/`);
     dispatch({
       type: GET_USER_DETAILS,
       payload: res.data
@@ -31,7 +31,7 @@ export const getUserProfileDetails = () => async dispatch => {
 export const updateUsername = newUsername => async dispatch => {
   try {
     const res = await axios.put(
-      `http://localhost:5000/user/changeUsername/`,
+      `https://kut-ty.herokuapp.com/user/changeUsername/`,
       newUsername
     );
     //console.log(res);
@@ -62,7 +62,7 @@ export const updateUsername = newUsername => async dispatch => {
 export const updateEmail = newEmail => async dispatch => {
   try {
     const res = await axios.put(
-      `http://localhost:5000/user/changeEmail/`,
+      `https://kut-ty.herokuapp.com/user/changeEmail/`,
       newEmail
     );
     //console.log(res);
@@ -93,7 +93,7 @@ export const updateEmail = newEmail => async dispatch => {
 export const updatePassword = newPassword => async dispatch => {
   try {
     const res = await axios.put(
-      `http://localhost:5000/user/changePassword/`,
+      `https://kut-ty.herokuapp.com/user/changePassword/`,
       newPassword
     );
     dispatch({
@@ -118,7 +118,7 @@ export const updatePassword = newPassword => async dispatch => {
 
 export const enableAPIService = () => async dispatch => {
   try {
-    const res = await axios.put(`http://localhost:5000/user/enableAPIService/`);
+    const res = await axios.put(`https://kut-ty.herokuapp.com/user/enableAPIService/`);
     dispatch({
       type: GET_MESSAGE,
       payload: res.data

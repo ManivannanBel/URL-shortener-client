@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 export const createUser = (newUser, history) => async dispatch => {
 
     try{
-        const res = await axios.post("http://localhost:5000/user/register", newUser);
+        const res = await axios.post("https://kut-ty.herokuapp.com/user/register", newUser);
         history.push("/signin");
         dispatch({
             type : GET_MESSAGE,
@@ -24,7 +24,7 @@ export const createUser = (newUser, history) => async dispatch => {
 export const loginUser = (loginCreds, history) => async dispatch => {
 
     try{    
-        const res = await axios.post("http://localhost:5000/user/login", loginCreds);
+        const res = await axios.post("https://kut-ty.herokuapp.com/user/login", loginCreds);
 
         const token = res.data.token;
         //save to local storage

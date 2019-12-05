@@ -11,7 +11,7 @@ class Footer extends Component {
                
             <div className="footer">
               <div className="container">
-                  <p className="text-muted">&copy; Copyright 2019 mini.ma</p>
+                  <p className="text-muted">&copy; Copyright 2019 kut.ty</p>
               </div>
             </div>
 
